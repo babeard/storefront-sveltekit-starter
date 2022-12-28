@@ -3,7 +3,8 @@
 
 	/** TODO: the following need to be replaced with real values */
 	let headerImage =
-		'https://readonlydemo.vendure.io/assets/preview/71/derick-david-409858-unsplash__preview.jpg';
+		'https://readonlydemo.vendure.io/assets/preview/a2/thomas-serer-420833-unsplash__preview.jpg';
+
 	const collections = [
 		{
 			id: '2',
@@ -129,9 +130,13 @@
 	<!-- Decorative image and overlay -->
 	<div aria-hidden="true" class="absolute inset-0 overflow-hidden">
 		{#if headerImage}
-			<img class="absolute inset-0 w-full" src={headerImage + '?w=800'} alt="header" />
+			<img
+				class="absolute -top-1/2 right-0 bottom-0 left-0 w-full"
+				src={headerImage + '?w=800'}
+				alt="header"
+			/>
 		{/if}
-		<div class="absolute inset-0 bg-gradient-to-br from-zinc-400 to-black mix-blend-multiply" />
+		<div class="absolute inset-0 bg-gradient-to-br from-pink-400 to-zinc-900 mix-blend-multiply" />
 	</div>
 	<div aria-hidden="true" class="absolute inset-0 bg-gray-900 opacity-50" />
 	<div
@@ -139,7 +144,7 @@
 	>
 		<div class="relative bg-zinc-800 bg-opacity-0 rounded-lg p-0">
 			<h1
-				class="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r from-yellow-600 via-red-500 to-blue-600"
+				class="text-6xl text-transparent bg-clip-text font-extrabold tracking-normal lg:text-6xl bg-gradient-to-r to-pink-600  from-indigo-600 drop-shadow-md"
 			>
 				Vendure SvelteKit Starter
 			</h1>
@@ -147,9 +152,9 @@
 
 		<p class="mt-4 text-2xl text-white">
 			A headless commerce storefront starter kit built with
-			<a href="https://www.vendure.io" class="text-blue-300 hover:text-blue-500"> Vendure </a>
+			<a href="https://www.vendure.io" class="text-indigo-300 hover:text-indigo-500"> Vendure </a>
 			&
-			<a href="~/routes/__cart/index" class="text-red-300 hover:text-red-500"> SvelteKit </a>
+			<a href="~/routes/__cart/index" class="text-pink-300 hover:text-pink-500"> SvelteKit </a>
 		</p>
 	</div>
 </div>
