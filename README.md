@@ -22,7 +22,7 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Svelt
    VENDURE_API_URL=https://readonlydemo.vendure.io/shop-api
    NODE_ENV=development
    ```
-4. `npm run dev` - run the storefront with a local Remix server
+4. `npm run dev` - run the storefront with a local SvelteKit server
 
 ### Vendure Server
 
