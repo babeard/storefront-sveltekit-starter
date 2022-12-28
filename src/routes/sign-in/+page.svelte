@@ -74,7 +74,8 @@
 					</div>
 
 					<div class="text-sm">
-						<a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+						<!-- TODO: Implement forgot password flow -->
+						<a href="/" class="font-medium text-primary-600 hover:text-primary-500">
 							Forgot your password?
 						</a>
 					</div>
