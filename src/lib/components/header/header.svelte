@@ -1,9 +1,14 @@
-<script>
+<script lang="ts">
 	import SearchBar from '$lib/components/header/search-bar.svelte';
+
+	import type { GetCollections$result } from '$houdini';
 
 	import { UserIcon } from '@babeard/svelte-heroicons/solid';
 	import { ShoppingBagIcon } from '@babeard/svelte-heroicons/outline';
 
+	export let mainCollections: GetCollections$result['collections']['items'] = [];
+
+	// Handle window scroll events
 	let isScrollingUp = false;
 	let prevScrollPos = 0;
 	const handleWindowScroll = () => {
@@ -15,25 +20,6 @@
 	/** TODO: the following need to be replaced with real values */
 	let isSignedIn = false;
 	let cartQuantity = 1;
-	let data = {
-		collections: [
-			{
-				id: '1',
-				name: 'Electronics',
-				slug: 'electronics'
-			},
-			{
-				id: '2',
-				name: 'Home & Garden',
-				slug: 'home-garden'
-			},
-			{
-				id: '3',
-				name: 'Sports & Outdoors',
-				slug: 'sports-outdoors'
-			}
-		]
-	};
 	const handleCartClick = () => {};
 </script>
 
@@ -74,7 +60,7 @@
 			</a>
 		</h1>
 		<div class="sm:space-x-4 hidden sm:flex">
-			{#each data.collections as collection (collection.id)}
+			{#each mainCollections as collection (collection.id)}
 				<a
 					href="/collections/{collection.slug}"
 					class="text-sm md:text-base text-gray-200 hover:text-white"
