@@ -4,8 +4,15 @@
 	import { UserIcon } from '@babeard/svelte-heroicons/solid';
 	import { ShoppingBagIcon } from '@babeard/svelte-heroicons/outline';
 
-	/** TODO: the following need to be replaced with real values */
 	let isScrollingUp = false;
+	let prevScrollPos = 0;
+	const handleWindowScroll = () => {
+		const currentScrollPos = window.pageYOffset;
+		isScrollingUp = prevScrollPos > currentScrollPos;
+		prevScrollPos = currentScrollPos;
+	};
+
+	/** TODO: the following need to be replaced with real values */
 	let isSignedIn = false;
 	let cartQuantity = 1;
 	let data = {
@@ -30,10 +37,12 @@
 	const handleCartClick = () => {};
 </script>
 
+<svelte:window on:scroll={handleWindowScroll} />
+
 <header
-	class=" bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform
-  {isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : ''}
-"
+	class="bg-gradient-to-r from-zinc-700 to-gray-900 shadow-lg transform {isScrollingUp
+		? 'sticky top-0 z-10 animate-dropIn'
+		: ''}"
 >
 	<div class="bg-zinc-100 text-gray-600 shadow-inner text-center text-sm py-2 px-2 xl:px-0">
 		<div class="max-w-6xl mx-2 md:mx-auto flex items-center justify-between">
