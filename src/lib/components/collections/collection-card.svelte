@@ -1,18 +1,7 @@
 <script lang="ts">
-	// TODO: this is a temporary type until graphql codegen
-	type CollectionPreview = {
-		id: string;
-		name: string;
-		slug: string;
-		parent: {
-			name: string;
-		};
-		featuredAsset: {
-			id: string;
-			preview: string;
-		};
-	};
-	export let collection: CollectionPreview;
+	import type { GetCollections$result } from '$houdini';
+
+	export let collection: GetCollections$result['collections']['items'][0];
 </script>
 
 <a
