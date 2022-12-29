@@ -10,10 +10,22 @@ const config = {
 	},
 	scalars: {
 		DateTime: {
-			type: 'string'
+			type: 'Date',
+			unmarshal(str) {
+				return new Date(str);
+			},
+			marshal(date) {
+				return date.toISOString();
+			}
 		},
 		JSON: {
-			type: 'any'
+			type: 'any',
+			unmarshal(str) {
+				return JSON.parse(str);
+			},
+			marshal(obj) {
+				return JSON.stringify(obj);
+			}
 		}
 	}
 };
