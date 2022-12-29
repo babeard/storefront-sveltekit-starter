@@ -1,0 +1,5 @@
+query ActiveOrder {
+	activeOrder {
+		...OrderDetail
+	}
+}

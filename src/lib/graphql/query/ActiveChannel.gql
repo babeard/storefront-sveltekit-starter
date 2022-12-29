@@ -1,0 +1,6 @@
+query ActiveChannel {
+	activeChannel {
+		id
+		currencyCode
+	}
+}

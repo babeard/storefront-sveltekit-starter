@@ -11,6 +11,9 @@ const config = {
 	scalars: {
 		DateTime: {
 			type: 'string'
+		},
+		JSON: {
+			type: 'any'
 		}
 	}
 };

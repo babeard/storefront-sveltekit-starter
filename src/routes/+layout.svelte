@@ -5,12 +5,23 @@
 	import Footer from '$lib/components/footer/footer.svelte';
 
 	import type { LayoutData } from './$types';
-	import type { GetCollectionsStore, GetCollections$result } from '$houdini';
+	import type {
+		GetCollectionsStore,
+		GetCollections$result,
+		ActiveCustomerStore,
+		ActiveChannelStore,
+		ActiveOrderStore
+	} from '$houdini';
 
 	type CollectionItem = GetCollections$result['collections']['items'][0];
 
-	export let data: LayoutData & { GetCollections: GetCollectionsStore };
-	$: ({ GetCollections } = data);
+	export let data: LayoutData & {
+		GetCollections: GetCollectionsStore;
+		ActiveCustomer: ActiveCustomerStore;
+		ActiveChannel: ActiveChannelStore;
+		ActiveOrder: ActiveOrderStore;
+	};
+	$: ({ GetCollections, ActiveCustomer, ActiveChannel, ActiveOrder } = data);
 
 	$: mainCollections =
 		$GetCollections.data?.collections?.items?.filter(rootCollectionsFilter) || [];
