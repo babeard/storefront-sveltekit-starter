@@ -7,6 +7,7 @@
 	import { ShoppingBagIcon } from '@babeard/svelte-heroicons/outline';
 
 	export let mainCollections: GetCollections$result['collections']['items'] = [];
+	export let cartQuantity: number = 0;
 
 	// Handle window scroll events
 	let isScrollingUp = false;
@@ -19,7 +20,6 @@
 
 	/** TODO: the following need to be replaced with real values */
 	let isSignedIn = false;
-	let cartQuantity = 1;
 	const handleCartClick = () => {};
 </script>
 
