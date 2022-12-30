@@ -3,6 +3,7 @@
 
 	import CollectionCard from '$lib/components/collections/collection-card.svelte';
 	import ProductCard from '$lib/components/product/product-card.svelte';
+	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
 
 	export let data: PageData;
 
@@ -26,7 +27,7 @@
     /> -->
 	</div>
 
-	<!-- TODO: <Breadcrumbs items={collection.breadcrumbs}></Breadcrumbs> -->
+	<Breadcrumbs items={collection.breadcrumbs} />
 
 	{#if collection.children?.length}
 		<div class="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
