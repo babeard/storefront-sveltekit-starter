@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
+import { graphql } from '$houdini';
 
-import { graphql, type CollectionsPage$result } from '$houdini';
-import type { PageLoadEvent } from './$houdini';
+import type { AfterLoadEvent, PageLoadEvent } from './$houdini';
 
 export const _houdini_load = graphql(`
 	query CollectionsPage($slug: String!, $input: SearchInput!) {
@@ -55,11 +55,10 @@ export function _CollectionsPageVariables({ params }: PageLoadEvent) {
 	};
 }
 
-// TODO: typescript error
-export function _houdini_afterLoad({ data }) {
-	const { collection, search } = data.CollectionsPage as CollectionsPage$result;
+export function _houdini_afterLoad({ data }: AfterLoadEvent) {
+	const { collection, search } = data.CollectionsPage;
 
 	if (!collection || !search) throw error(404, { message: 'Collection not found' });
 
-	return data as CollectionsPage$result;
+	return data;
 }
