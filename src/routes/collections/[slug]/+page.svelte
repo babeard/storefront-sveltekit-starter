@@ -4,6 +4,9 @@
 	import CollectionCard from '$lib/components/collections/collection-card.svelte';
 	import ProductCard from '$lib/components/product/product-card.svelte';
 	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
+	import FacetFilterControls from '$lib/components/facet/facet-filter-controls.svelte';
+	import { transformFacetValues } from './facet';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
 
@@ -11,8 +14,16 @@
 
 	$: collection = $CollectionsPage.data?.collection!;
 	$: search = $CollectionsPage.data?.search!;
+	$: allFacets = $CollectionsPage.data?.allFacetValues!;
 
-	// $: ({ collection, result, resultWithoutFacetValueFilters, facetValueIds } = data);
+	$: currentFacetValues = search.facetValues;
+
+	$: facetWithValues = transformFacetValues(
+		allFacets.facetValues,
+		currentFacetValues,
+		$page.url.searchParams.getAll('fvid'),
+		allFacets.totalItems
+	);
 </script>
 
 <div class="max-w-6xl mx-auto px-4">
@@ -43,6 +54,7 @@
 	{/if}
 
 	<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
+		<FacetFilterControls {facetWithValues} />
 		<!-- TODO: <FacetFilterControls
       facetFilterTracker={facetValuesTracker.current}
       mobileFiltersOpen={mobileFiltersOpen}

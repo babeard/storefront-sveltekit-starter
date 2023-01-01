@@ -42,6 +42,21 @@ export const _houdini_load = graphql(`
 				}
 			}
 		}
+
+		allFacetValues: search(input: $input) {
+			totalItems
+			facetValues {
+				count
+				facetValue {
+					id
+					name
+					facet {
+						id
+						name
+					}
+				}
+			}
+		}
 	}
 `);
 
