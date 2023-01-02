@@ -12,7 +12,7 @@ export interface FacetWithValues {
 	}[];
 }
 
-export function transformFacetValues(
+export function groupFacetValues(
 	allFacets: FacetValues,
 	currentFacets: FacetValues,
 	activeFacetIds: string[],

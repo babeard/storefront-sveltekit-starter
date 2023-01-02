@@ -5,7 +5,7 @@
 	import ProductCard from '$lib/components/product/product-card.svelte';
 	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
 	import FacetFilterControls from '$lib/components/facet/facet-filter-controls.svelte';
-	import { transformFacetValues } from './facet';
+	import { groupFacetValues } from './facet';
 	import { page } from '$app/stores';
 
 	export let data: PageData;
@@ -18,7 +18,7 @@
 
 	$: currentFacetValues = search.facetValues;
 
-	$: facetWithValues = transformFacetValues(
+	$: facetWithValues = groupFacetValues(
 		allFacets.facetValues,
 		currentFacetValues,
 		$page.url.searchParams.getAll('fvid'),
@@ -55,11 +55,10 @@
 
 	<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
 		<FacetFilterControls {facetWithValues} />
-		<!-- TODO: <FacetFilterControls
-      facetFilterTracker={facetValuesTracker.current}
+		<!-- TODO:
       mobileFiltersOpen={mobileFiltersOpen}
       setMobileFiltersOpen={setMobileFiltersOpen}
-    /> -->
+    -->
 		<div class="sm:col-span-5 lg:col-span-4">
 			<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 				{#each search.items as item (item.productId)}
