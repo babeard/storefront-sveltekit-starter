@@ -7,7 +7,7 @@
 	import FacetFilterControls from '$lib/components/facet/facet-filter-controls.svelte';
 	import { groupFacetValues } from './facet';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 
 	const FILTER_KEY = 'fvid';
 
@@ -40,8 +40,8 @@
 			$page.url.searchParams.delete(FILTER_KEY);
 			keep.forEach((entry) => $page.url.searchParams.append(FILTER_KEY, entry));
 		}
-
 		await goto($page.url, { replaceState: true, noScroll: true, keepFocus: true });
+		await invalidate('app:filter_fvid'); // TODO: is this the best way?
 	};
 </script>
 

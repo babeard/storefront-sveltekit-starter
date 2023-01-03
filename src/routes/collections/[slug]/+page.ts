@@ -4,7 +4,7 @@ import { graphql } from '$houdini';
 import type { AfterLoadEvent, PageLoadEvent } from './$houdini';
 
 export const _houdini_load = graphql(`
-	query CollectionsPage($slug: String!, $input: SearchInput!) {
+	query CollectionsPage($slug: String!, $input: SearchInput!, $inputAllFacets: SearchInput!) {
 		collection(slug: $slug) {
 			id
 			name
@@ -43,7 +43,7 @@ export const _houdini_load = graphql(`
 			}
 		}
 
-		allFacetValues: search(input: $input) {
+		allFacetValues: search(input: $inputAllFacets) {
 			totalItems
 			facetValues {
 				count
@@ -60,12 +60,21 @@ export const _houdini_load = graphql(`
 	}
 `);
 
-export function _CollectionsPageVariables({ params }: PageLoadEvent) {
+export function _CollectionsPageVariables({ url, params, depends }: PageLoadEvent) {
+	// TODO: Refactor. This method seems inefficient as you have to reload the entire `CollectionsPage` query.
+	depends('app:filter_fvid');
+
+	const baseInput = {
+		collectionSlug: params.slug,
+		groupByProduct: true
+	};
+
 	return {
 		slug: params.slug,
+		inputAllFacets: baseInput,
 		input: {
-			collectionSlug: params.slug,
-			groupByProduct: true
+			...baseInput,
+			facetValueIds: url.searchParams.getAll('fvid')
 		}
 	};
 }
