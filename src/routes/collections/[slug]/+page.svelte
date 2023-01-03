@@ -8,10 +8,14 @@
 	import { groupFacetValues } from './facet';
 	import { page } from '$app/stores';
 	import { goto, invalidate } from '$app/navigation';
+	import FiltersButton from '$lib/components/facet/filters-button.svelte';
 
 	const FILTER_KEY = 'fvid';
 
 	export let data: PageData;
+
+	let mobileFiltersOpen = false;
+	let setMobileFiltersOpen = (show: boolean) => (mobileFiltersOpen = show);
 
 	$: ({ CollectionsPage } = data);
 
@@ -50,11 +54,7 @@
 		<h2 class="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
 			{collection.name}
 		</h2>
-
-		<!-- TODO: <FiltersButton
-      filterCount={facetValueIds.length}
-      onClick={() => setMobileFiltersOpen(true)}
-    /> -->
+		<FiltersButton filterCount={allFacets.totalItems} on:click={() => setMobileFiltersOpen(true)} />
 	</div>
 
 	<Breadcrumbs items={collection.breadcrumbs} />
@@ -73,11 +73,12 @@
 	{/if}
 
 	<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
-		<FacetFilterControls {facetWithValues} on:change={handleFilterChange} />
-		<!-- TODO:
-      mobileFiltersOpen={mobileFiltersOpen}
-      setMobileFiltersOpen={setMobileFiltersOpen}
-    -->
+		<FacetFilterControls
+			{facetWithValues}
+			{mobileFiltersOpen}
+			on:close={() => setMobileFiltersOpen(false)}
+			on:change={handleFilterChange}
+		/>
 		<div class="sm:col-span-5 lg:col-span-4">
 			<div class="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 				{#each search.items as item (item.productId)}
