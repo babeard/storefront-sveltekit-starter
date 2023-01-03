@@ -7,6 +7,9 @@
 	import FacetFilterControls from '$lib/components/facet/facet-filter-controls.svelte';
 	import { groupFacetValues } from './facet';
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
+
+	const FILTER_KEY = 'fvid';
 
 	export let data: PageData;
 
@@ -21,9 +24,25 @@
 	$: facetWithValues = groupFacetValues(
 		allFacets.facetValues,
 		currentFacetValues,
-		$page.url.searchParams.getAll('fvid'),
+		$page.url.searchParams.getAll(FILTER_KEY),
 		allFacets.totalItems
 	);
+
+	const handleFilterChange = async ({ detail }: CustomEvent) => {
+		const { value, checked } = detail;
+
+		if (checked) {
+			$page.url.searchParams.append(FILTER_KEY, value);
+		} else {
+			// Remove the key=value pair from the URL
+			const entries = $page.url.searchParams.getAll(FILTER_KEY);
+			const keep = entries.filter((entry) => entry !== value);
+			$page.url.searchParams.delete(FILTER_KEY);
+			keep.forEach((entry) => $page.url.searchParams.append(FILTER_KEY, entry));
+		}
+
+		await goto($page.url, { replaceState: true, noScroll: true, keepFocus: true });
+	};
 </script>
 
 <div class="max-w-6xl mx-auto px-4">
@@ -54,7 +73,7 @@
 	{/if}
 
 	<div class="mt-6 grid sm:grid-cols-5 gap-x-4">
-		<FacetFilterControls {facetWithValues} />
+		<FacetFilterControls {facetWithValues} on:change={handleFilterChange} />
 		<!-- TODO:
       mobileFiltersOpen={mobileFiltersOpen}
       setMobileFiltersOpen={setMobileFiltersOpen}

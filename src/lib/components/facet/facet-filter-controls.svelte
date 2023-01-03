@@ -17,8 +17,11 @@
 	import { MinusSmallIcon, PlusSmallIcon } from '@babeard/svelte-heroicons/solid';
 	import { page } from '$app/stores';
 	import type { FacetWithValues } from 'src/routes/collections/[slug]/facet';
+	import { createEventDispatcher } from 'svelte';
 
 	export let facetWithValues: FacetWithValues[];
+
+	const dispatch = createEventDispatcher();
 
 	// TODO: Temporary vars below
 	export let mobileFiltersOpen = false;
@@ -26,7 +29,11 @@
 
 	$: q = $page.url.searchParams.get('q');
 
-	const handleChange = () => {};
+	const handleFilterChange = ({ target }: Event) => {
+		const { value, checked } = target as HTMLInputElement;
+
+		dispatch('change', { value, checked });
+	};
 </script>
 
 <!-- Mobile filter dialog -->
@@ -66,7 +73,7 @@
 							<XMarkIcon class="h-6 w-6" aria-hidden="true" />
 						</button>
 					</div>
-					<form class="mt-4 border-t border-gray-200" method="get" on:change={handleChange}>
+					<form class="mt-4 border-t border-gray-200" method="get" on:change={handleFilterChange}>
 						<input type="hidden" name="q" value={q} />
 						{#each facetWithValues as facet (facet.id)}
 							<Disclosure
@@ -123,7 +130,7 @@
 	</Dialog>
 </TransitionRoot>
 
-<form method="get" class="hidden lg:block" on:change={handleChange}>
+<form method="get" class="hidden lg:block" on:change={handleFilterChange}>
 	<input type="hidden" name="q" value={q} />
 	{#each facetWithValues as facet (facet.id)}
 		<Disclosure as="div" defaultOpen={true} class="border-b border-gray-200 py-6" let:open>
