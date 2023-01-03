@@ -36,4 +36,4 @@
 	<slot />
 </main>
 
-<Footer />
+<Footer {mainCollections} />

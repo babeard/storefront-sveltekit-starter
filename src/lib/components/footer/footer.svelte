@@ -1,4 +1,8 @@
-<script>
+<script lang="ts">
+	import type { GetCollections$result } from '$houdini';
+
+	export let mainCollections: GetCollections$result['collections']['items'] = [];
+
 	const navigation = {
 		support: [
 			{ name: 'Help', href: '#' },
@@ -13,25 +17,6 @@
 			{ name: 'Press', href: '#' }
 		]
 	};
-
-	/** TODO: the following need to be replaced with real values */
-	const collections = [
-		{
-			id: '1',
-			name: 'Electronics',
-			slug: 'electronics'
-		},
-		{
-			id: '2',
-			name: 'Home & Garden',
-			slug: 'home-garden'
-		},
-		{
-			id: '3',
-			name: 'Sports & Outdoors',
-			slug: 'sports-outdoors'
-		}
-	];
 </script>
 
 <footer class="mt-24 border-t bg-gray-50" aria-labelledby="footer-heading">
@@ -43,7 +28,7 @@
 					<div>
 						<h3 class="text-sm font-semibold text-gray-500 tracking-wider uppercase">Shop</h3>
 						<ul class="mt-4 space-y-4">
-							{#each collections as collection (collection.id)}
+							{#each mainCollections as collection (collection.id)}
 								<li>
 									<a
 										href="/collections/{collection.slug}"
