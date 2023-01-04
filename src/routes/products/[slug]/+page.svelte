@@ -1,34 +1,52 @@
 <script lang="ts">
 	import type { PageData } from './$houdini';
-	import { page } from '$app/stores';
+	import type { ActionData } from './$types';
+	import type { SubmitFunction } from '$app/forms';
+
+	import { slide } from 'svelte/transition';
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
 
 	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
 	import ScrollableContainer from '$lib/components/product/scrollable-container.svelte';
 	import TopReviews from '$lib/components/product/top-reviews.svelte';
-	import { HeartIcon } from '@babeard/svelte-heroicons/outline';
-	import { CheckIcon } from '@babeard/svelte-heroicons/solid';
 	import Price from '$lib/components/product/price.svelte';
 	import StockLevelLabel from '$lib/components/product/stock-level-label.svelte';
+	import Alert from '$lib/components/alert.svelte';
+	import { CheckIcon, HeartIcon } from '@babeard/svelte-heroicons/solid';
 
 	export let data: PageData;
+	export let form: ActionData;
 
+	let submitState: 'idle' | 'loading' = 'idle';
 	let selectedVariantId: string;
 
+	$: ({ product: prod } = data);
 	$: ({ ActiveOrder } = $page.data);
 
-	// TODO: fix typescript
+	// TODO: fix typescript `any`
 	$: qtyInCart =
-		$ActiveOrder?.lines?.find((l) => l.productVariant.id === selectedVariantId)?.quantity ?? 0;
+		$ActiveOrder?.data.lines?.find((l: any) => l.productVariant.id === selectedVariantId)
+			?.quantity ?? 0;
 
-	$: ({ product: prod } = data);
-
-	$: product = $prod.data.product;
+	$: product = $prod.data!.product!;
 
 	$: selectedVariant =
 		product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
 
 	$: featuredAsset = selectedVariant.featuredAsset;
+
+	const handleVariantSelect = (event: { currentTarget: HTMLSelectElement }) => {
+		selectedVariantId = event.currentTarget.value;
+	};
+
+	const submitAddToCart: SubmitFunction = () => {
+		submitState = 'loading';
+		return async ({ result, update }) => {
+			await update();
+			submitState = 'idle';
+		};
+	};
 </script>
 
 <div>
@@ -61,7 +79,7 @@
 									: ''}"
 								on:click={() => (featuredAsset = asset)}
 							>
-								<!-- '?preset=full' /* not ideal, but technically prevents loading 2 seperate images */ -->
+								<!-- '?preset=full' not ideal, but technically prevents loading 2 seperate images -->
 								<!-- svelte-ignore a11y-missing-attribute -->
 								<img
 									draggable="false"
@@ -83,7 +101,7 @@
 					</div>
 				</div>
 
-				<form method="POST" action="?/addToCart" use:enhance>
+				<form method="POST" action="?/addToCart" use:enhance={submitAddToCart}>
 					{#if product.variants.length > 1}
 						<div class="mt-4">
 							<label for="option" class="block text-sm font-medium text-gray-700">
@@ -95,10 +113,7 @@
 								id="productVariant"
 								value={selectedVariant.id}
 								name="variantId"
-								on:change={(evt) => {
-									const { value } = evt.currentTarget;
-									selectedVariantId = value;
-								}}
+								on:change={handleVariantSelect}
 							>
 								{#each product.variants as variant (variant.id)}
 									<option value={variant.id}>
@@ -108,7 +123,7 @@
 							</select>
 						</div>
 					{:else}
-						<input type="hidden" name="variantId" value={selectedVariantId} />
+						<input type="hidden" name="variantId" value={selectedVariant.id} />
 					{/if}
 
 					<div class="mt-10 flex flex-col sm:flex-row sm:items-center">
@@ -119,20 +134,16 @@
 							/>
 						</p>
 						<div class="flex sm:flex-col1 align-baseline">
-							<!-- class={`max-w-xs flex-1 ${
-                transition.state !== 'idle'
-                  ? 'bg-gray-400'
-                  : qtyInCart === 0
-                  ? 'bg-primary-600 hover:bg-primary-700'
-                  : 'bg-green-600 active:bg-green-700 hover:bg-green-700'
-              } -->
 							<button
 								type="submit"
-								class="{qtyInCart === 0
+								class="{submitState !== 'idle'
+									? 'bg-gray-300'
+									: qtyInCart === 0
 									? 'bg-primary-600 hover:bg-primary-700'
-									: 'bg-green-600 active:bg-green-700 hover:bg-green-700'} max-w-xs flex-1 transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full"
+									: 'bg-green-600 active:bg-green-700 hover:bg-green-700'} max-w-xs flex-1 transition-all border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full"
+								disabled={submitState !== 'idle'}
+								class:loading-bar-bottom={submitState !== 'idle'}
 							>
-								<!-- disabled={transition.state !== 'idle'} -->
 								{#if qtyInCart}
 									<span class="flex items-center">
 										<CheckIcon class="w-5 h-5 mr-1" />
@@ -157,11 +168,12 @@
 						<span class="text-gray-500">{selectedVariant?.sku}</span>
 						<StockLevelLabel stockLevel={selectedVariant?.stockLevel} />
 					</div>
-					<!-- TODO: {addItemToOrderError && (
-            <div class="mt-4">
-              <Alert message={addItemToOrderError} />
-            </div>
-          )} -->
+
+					{#if form?.error}
+						<div in:slide class="mt-4">
+							<Alert message={form.error} />
+						</div>
+					{/if}
 
 					<section class="mt-12 pt-12 border-t text-xs">
 						<h3 class="text-gray-600 font-bold mb-2">Shipping & Returns</h3>

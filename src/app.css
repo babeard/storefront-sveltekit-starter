@@ -20,3 +20,29 @@
     color: inherit;
   }
 }
+
+.loading-bar-bottom {
+  display: inline-block;
+  height: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-bar-bottom::after {
+  content: '';
+  position: absolute;
+  height: 4px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-color: #ffffff44;
+  border-radius: 2px;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

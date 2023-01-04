@@ -1,5 +1,5 @@
 <script lang="ts">
-	export let stockLevel: 'IN_STOCK' | 'OUT_OF_STOCK' | 'LOW_STOCK';
+	export let stockLevel: string;
 
 	const stocks = {
 		IN_STOCK: { label: 'In stock', classes: 'bg-green-100 text-green-800' },
@@ -7,7 +7,9 @@
 		LOW_STOCK: { label: 'Low stock', classes: 'bg-yellow-100 text-yellow-800' }
 	};
 
-	$: active = stocks[stockLevel];
+	$: active = Object.keys(stocks).includes(stockLevel)
+		? stocks[stockLevel as keyof typeof stocks]
+		: { label: stockLevel, classes: 'bg-gray-100 text-gray-800' };
 </script>
 
 <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium {active.classes}">
