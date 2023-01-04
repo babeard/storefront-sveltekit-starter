@@ -21,7 +21,7 @@
 	let submitState: 'idle' | 'loading' = 'idle';
 	let selectedVariantId: string;
 
-	$: ({ product: prod } = data);
+	$: ({ GetProductDetail: prod } = data);
 	$: ({ ActiveOrder } = $page.data);
 
 	// TODO: fix typescript `any`

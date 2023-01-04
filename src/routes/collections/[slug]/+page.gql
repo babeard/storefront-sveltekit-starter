@@ -1,0 +1,54 @@
+query CollectionsPage($slug: String!, $input: SearchInput!, $inputAllFacets: SearchInput!) {
+	collection(slug: $slug) {
+		id
+		name
+		slug
+		breadcrumbs {
+			id
+			name
+			slug
+		}
+		children {
+			id
+			name
+			slug
+			featuredAsset {
+				id
+				preview
+			}
+		}
+	}
+
+	search(input: $input) {
+		totalItems
+		items {
+			...ListedProduct
+		}
+		facetValues {
+			count
+			facetValue {
+				id
+				name
+				facet {
+					id
+					name
+				}
+			}
+		}
+	}
+
+	allFacetValues: search(input: $inputAllFacets) {
+		totalItems
+		facetValues {
+			count
+			facetValue {
+				id
+				name
+				facet {
+					id
+					name
+				}
+			}
+		}
+	}
+}
