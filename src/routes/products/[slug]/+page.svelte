@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { PageData } from './$houdini';
-	import type { ActionData } from './$types';
 	import type { SubmitFunction } from '$app/forms';
 
 	import { slide } from 'svelte/transition';
@@ -16,9 +15,9 @@
 	import { CheckIcon, HeartIcon } from '@babeard/svelte-heroicons/solid';
 
 	export let data: PageData;
-	export let form: ActionData;
 
 	let submitState: 'idle' | 'loading' = 'idle';
+	let submitError: string;
 	let selectedVariantId: string;
 
 	$: ({ GetProductDetail: prod } = data);
@@ -43,6 +42,10 @@
 	const submitAddToCart: SubmitFunction = () => {
 		submitState = 'loading';
 		return async ({ result, update }) => {
+			if (result.type === 'failure' && result.data) {
+				submitError = result.data.message;
+			}
+
 			await update();
 			submitState = 'idle';
 		};
@@ -169,9 +172,9 @@
 						<StockLevelLabel stockLevel={selectedVariant?.stockLevel} />
 					</div>
 
-					{#if form?.error}
+					{#if submitError}
 						<div in:slide class="mt-4">
-							<Alert message={form.error} />
+							<Alert message={submitError} />
 						</div>
 					{/if}
 
