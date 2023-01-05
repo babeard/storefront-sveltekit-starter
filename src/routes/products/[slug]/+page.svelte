@@ -1,9 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$houdini';
-	import type { SubmitFunction } from '$app/forms';
 
 	import { slide } from 'svelte/transition';
-	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 
 	import Breadcrumbs from '$lib/components/breadcrumbs.svelte';
@@ -13,6 +11,7 @@
 	import StockLevelLabel from '$lib/components/product/stock-level-label.svelte';
 	import Alert from '$lib/components/alert.svelte';
 	import { CheckIcon, HeartIcon } from '@babeard/svelte-heroicons/solid';
+	import { ActiveOrderStore, CachePolicy, graphql } from '$houdini';
 
 	export let data: PageData;
 
@@ -20,13 +19,15 @@
 	let submitError: string;
 	let selectedVariantId: string;
 
+	let ActiveOrder: ActiveOrderStore;
+
 	$: ({ GetProductDetail: prod } = data);
 	$: ({ ActiveOrder } = $page.data);
 
-	// TODO: fix typescript `any`
 	$: qtyInCart =
-		$ActiveOrder?.data.lines?.find((l: any) => l.productVariant.id === selectedVariantId)
-			?.quantity ?? 0;
+		$ActiveOrder?.data?.activeOrder?.lines?.find(
+			(l) => l?.productVariant?.id === selectedVariant.id
+		)?.quantity ?? 0;
 
 	$: product = $prod.data!.product!;
 
@@ -39,16 +40,53 @@
 		selectedVariantId = event.currentTarget.value;
 	};
 
-	const submitAddToCart: SubmitFunction = () => {
-		submitState = 'loading';
-		return async ({ result, update }) => {
-			if (result.type === 'failure' && result.data) {
-				submitError = result.data.message;
-			}
+	const addCart = graphql(`
+		mutation AddToCart($variantId: ID!, $quantity: Int!) {
+			addItemToOrder(productVariantId: $variantId, quantity: $quantity) {
+				... on Order {
+					id
+					totalQuantity
+					lines {
+						id
+						unitPriceWithTax
+						quantity
+						linePriceWithTax
+						productVariant {
+							name
+						}
+						featuredAsset {
+							preview
+						}
+					}
+					shippingWithTax
+					totalWithTax
+				}
 
-			await update();
-			submitState = 'idle';
-		};
+				... on ErrorResult {
+					errorCode
+					message
+				}
+			}
+		}
+	`);
+
+	const handleSubmit = async () => {
+		submitState = 'loading';
+
+		try {
+			const result = await addCart.mutate({
+				variantId: selectedVariant.id,
+				quantity: 1
+			});
+		} catch (e: any) {
+			submitError = e.message;
+		}
+
+		await ActiveOrder.fetch({
+			policy: CachePolicy.NetworkOnly
+		});
+
+		submitState = 'idle';
 	};
 </script>
 
@@ -104,7 +142,7 @@
 					</div>
 				</div>
 
-				<form method="POST" action="?/addToCart" use:enhance={submitAddToCart}>
+				<form on:submit|preventDefault={handleSubmit}>
 					{#if product.variants.length > 1}
 						<div class="mt-4">
 							<label for="option" class="block text-sm font-medium text-gray-700">

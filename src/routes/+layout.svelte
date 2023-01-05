@@ -26,11 +26,13 @@
 	$: mainCollections =
 		$GetCollections.data?.collections?.items?.filter(rootCollectionsFilter) || [];
 
+	$: cartQuantity = $ActiveOrder.data?.activeOrder?.totalQuantity ?? 0;
+
 	const rootCollectionsFilter = (item: CollectionItem) =>
 		item?.parent?.name === '__root_collection__';
 </script>
 
-<Header {mainCollections} />
+<Header {mainCollections} {cartQuantity} />
 
 <main>
 	<slot />
