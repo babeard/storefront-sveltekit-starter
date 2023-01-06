@@ -3,6 +3,7 @@
 
 	import Header from '$lib/components/header/header.svelte';
 	import Footer from '$lib/components/footer/footer.svelte';
+	import CartTray from '$lib/components/cart/cart-tray.svelte';
 
 	import type { LayoutData } from './$types';
 	import type {
@@ -37,5 +38,7 @@
 <main>
 	<slot />
 </main>
+
+<CartTray activeOrder={ActiveOrder} />
 
 <Footer {mainCollections} />

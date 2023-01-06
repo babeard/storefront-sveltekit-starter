@@ -5,6 +5,7 @@
 
 	import { UserIcon } from '@babeard/svelte-heroicons/solid';
 	import { ShoppingBagIcon } from '@babeard/svelte-heroicons/outline';
+	import { cartOpen } from '$lib/stores/cart';
 
 	export let mainCollections: GetCollections$result['collections']['items'] = [];
 	export let cartQuantity: number = 0;
@@ -18,9 +19,10 @@
 		prevScrollPos = currentScrollPos;
 	};
 
+	const openCart = () => ($cartOpen = true);
+
 	/** TODO: the following need to be replaced with real values */
 	let isSignedIn = false;
-	const handleCartClick = () => {};
 </script>
 
 <svelte:window on:scroll={handleWindowScroll} />
@@ -76,7 +78,7 @@
 		<div class="">
 			<button
 				class="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1"
-				on:click={handleCartClick}
+				on:click={openCart}
 				aria-label="Open cart tray"
 			>
 				<ShoppingBagIcon />

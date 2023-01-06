@@ -37,6 +37,8 @@
 	const handleKeyUp = (evt: KeyboardEvent) => {
 		if (mobileFiltersOpen && evt.key === 'Escape') close();
 	};
+
+	// TODO: Revisit/restructure similar to '$lib/components/cart/CartTray.svelte'
 </script>
 
 <svelte:window on:keyup={handleKeyUp} />
