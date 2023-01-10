@@ -22,7 +22,6 @@
 }
 
 .loading-bar-bottom {
-  display: inline-block;
   height: auto;
   position: relative;
   overflow: hidden;

@@ -72,9 +72,7 @@
 
 							<div class="mt-8">
 								{#if order?.totalQuantity}
-									<CartContents orderLines={order?.lines} {editable} {currencyCode} />
-									<!-- TODO: on above component removeItem={removeItem}
-                      adjustOrderLine={adjustOrderLine} -->
+									<CartContents {editable} {activeOrder} />
 								{:else}
 									<div class="flex items-center justify-center h-48 text-xl text-gray-400">
 										Your cart is empty
