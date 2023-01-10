@@ -1,12 +1,16 @@
 # Vendure SvelteKit Storefront Starter
 
-An e-commerce storefront for [Vendure](https://www.vendure.io) built with [SvelteKit](https://kit.svelte.dev/).
+An e-commerce storefront for [Vendure](https://www.vendure.io) built with [SvelteKit](https://kit.svelte.dev/), [Houdini](https://www.houdinigraphql.com/), and [TailwindCSS](https://tailwindcss.com/). Heavily inspired by the official [Vendure Remix Storefront Starter](https://github.com/vendure-ecommerce/storefront-remix-starter) and [Vendure Sveltekit Storefront](https://github.com/spences10/sveltekit-vendure-commerce).
+
+## Why another SvelteKit storefront?
+
+Currently, this repo is for educational purposes only. The goal was to learn Houdini and Vendure, so I decided to combine the two. It could also be useful to check out the other repos listed above for inspiration on different ways to tackle the same problem set within similar technology stacks.
 
 ## To do
 
-- Cart
+- Cart ✅
 - Checkout flow
-- Search facet filters
+- Search facet filters ✅
 - Login
 - Account creation
 - Customer account management
@@ -23,54 +27,6 @@ An e-commerce storefront for [Vendure](https://www.vendure.io) built with [Svelt
    NODE_ENV=development
    ```
 4. `npm run dev` - run the storefront with a local SvelteKit server
-
-### Vendure Server
-
-This storefront requires a Vendure server. You can either run a local instance, or use our public demo server.
-
-#### Local
-
-You can set up a local instance, populated with test data by following the instructions in the Vendure [Getting Started guide](https://www.vendure.io/docs/getting-started/). Note that if you have SvelteKit configured to run on port 3000 by default, you should change the local Vendure server to run on another port, and also make sure you have enabled the `bearer` method for managing session tokens:
-
-```ts
-// vendure-config.ts
-export const config: VendureConfig = {
-	apiOptions: {
-		port: 3001
-		// ...
-	},
-	authOptions: {
-		tokenMethod: ['bearer', 'cookie'] // or just 'bearer'
-		// ...
-	}
-	// ...
-};
-```
-
-## Payment Gateways
-
-Currently, both Stripe and Braintree are supported out of the box, but only one of them can be used at the same time
-
-### Stripe integration
-
-This repo has a built-in Stripe payment integration. To enable it, ensure that your Vendure server is set up with
-the [StripePlugin](https://www.vendure.io/docs/typescript-api/payments-plugin/stripe-plugin/).
-
-Ensure your new PaymentMethod uses the word `stripe` somewhere in its code, as that's how this integration will know
-to load the Stripe payment element.
-
-Then add your Stripe publishable key to the env file:
-
-```
-STRIPE_PUBLISHABLE_KEY=pk_test_t38hl...etc
-```
-
-### Braintree integration
-
-This repo has built-in Braintree integration. To enable it, ensure that your Vendure server is set up with
-the [BraintreePlugin](https://www.vendure.io/docs/typescript-api/payments-plugin/braintree-plugin/).
-
-Currently, `storeCustomersInBraintree` has to be set to `true` in plugin options.
 
 ## License
 
