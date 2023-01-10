@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ActiveOrderStore, CachePolicy, CurrencyCode, graphql } from '$houdini';
 	import { slide } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
 	import Price from '../product/price.svelte';
 	export let activeOrder: ActiveOrderStore;
 	export let editable = false;
@@ -73,6 +74,7 @@
 				{@const loading = loadingLineId === line.id}
 				{@const error = errorLineId === line.id}
 				<li
+					animate:flip={{ duration: 300 }}
 					class="py-6 flex transition-all duration-200 ease-out {loading
 						? 'bg-gray-200 px-4 -mx-4 loading-bar-bottom rounded-md text-gray-400'
 						: error
